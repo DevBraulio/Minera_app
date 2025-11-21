@@ -1,0 +1,124 @@
+<template>
+  <q-page class="q-pa-lg flex flex-center">
+    <q-card class="q-pa-lg shadow-4" style="width: 450px; max-width: 90%">
+      <q-card-section>
+        <div class="text-h6 text-primary text-center">Registrar Usuario</div>
+      </q-card-section>
+
+      <q-card-section class="q-gutter-md">
+        <q-input
+          filled
+          v-model="form.nombre"
+          label="Nombre"
+          lazy-rules
+          :rules="[(val) => !!val || 'El nombre es obligatorio']"
+        />
+
+        <q-input
+          filled
+          v-model="form.usuario"
+          label="Usuario"
+          lazy-rules
+          :rules="[(val) => !!val || 'El usuario es obligatorio']"
+        />
+
+        <q-input
+          filled
+          v-model="form.password"
+          label="Contraseña"
+          type="password"
+          lazy-rules
+          :rules="[(val) => !!val || 'La contraseña es obligatoria']"
+        />
+
+        <q-input
+          filled
+          v-model="form.correo"
+          label="Correo"
+          type="email"
+          lazy-rules
+          :rules="[
+            (val) => !!val || 'El correo es obligatorio',
+            (val) => val.includes('@') || 'Correo no válido',
+          ]"
+        />
+      </q-card-section>
+
+      <q-card-actions align="center">
+        <q-btn
+          color="primary"
+          label="Registrar"
+          class="full-width"
+          :loading="loading"
+          @click="confirmarEnvio"
+        />
+      </q-card-actions>
+    </q-card>
+  </q-page>
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import { Notify, useQuasar } from 'quasar'
+import axios from 'axios'
+
+const $q = useQuasar()
+
+const API = 'https://cifradosdev.com/certi_minera_backend/public'
+
+const form = ref({
+  nombre: '',
+  usuario: '',
+  contraseña: '',
+  correo: '',
+})
+
+const loading = ref(false)
+
+// CONFIRMACION CON POPUP
+function confirmarEnvio() {
+  $q.dialog({
+    title: 'Confirmación',
+    message: '¿Estás seguro de guardar este usuario?',
+
+    ok: { label: 'Sí, guardar', color: 'primary' },
+    cancel: { label: 'Cancelar' },
+  }).onOk(() => {
+    void registrar()
+  })
+}
+
+// LLAMADA A LA API
+async function registrar() {
+  loading.value = true
+
+  try {
+    await axios.post(`${API}/usuarios/registrar`, form.value)
+
+    Notify.create({
+      type: 'positive',
+      message: 'Usuario guardado correctamente 🎉',
+      position: 'top-right',
+    })
+
+    // Reiniciamos el formulario
+    form.value = {
+      nombre: '',
+      usuario: '',
+      password: '',
+      correo: '',
+    }
+  } catch (error) {
+    console.error('ERROR API:', error)
+
+    Notify.create({
+      type: 'negative',
+      message: 'Error al guardar ❌',
+      caption: error?.response?.data?.message || 'No se pudo conectar al servidor',
+      position: 'top-right',
+    })
+  }
+
+  loading.value = false
+}
+</script>

@@ -1,11 +1,12 @@
-import { defineRouter } from '#q-app/wrappers';
+import { defineRouter } from '#q-app/wrappers'
 import {
   createMemoryHistory,
   createRouter,
   createWebHashHistory,
   createWebHistory,
-} from 'vue-router';
-import routes from './routes';
+} from 'vue-router'
+import routes from './routes'
+import { useAuthStore } from 'src/stores/auth'
 
 /*
  * If not building with SSR mode, you can
@@ -19,7 +20,9 @@ import routes from './routes';
 export default defineRouter(function (/* { store, ssrContext } */) {
   const createHistory = process.env.SERVER
     ? createMemoryHistory
-    : (process.env.VUE_ROUTER_MODE === 'history' ? createWebHistory : createWebHashHistory);
+    : process.env.VUE_ROUTER_MODE === 'history'
+      ? createWebHistory
+      : createWebHashHistory
 
   const Router = createRouter({
     scrollBehavior: () => ({ left: 0, top: 0 }),
@@ -29,7 +32,31 @@ export default defineRouter(function (/* { store, ssrContext } */) {
     // quasar.conf.js -> build -> vueRouterMode
     // quasar.conf.js -> build -> publicPath
     history: createHistory(process.env.VUE_ROUTER_BASE),
-  });
+  })
 
-  return Router;
-});
+  // Navigation Guard para autenticación
+  Router.beforeEach((to, from, next) => {
+    const authStore = useAuthStore()
+
+    // Inicializar autenticación desde localStorage
+    if (!authStore.user) {
+      authStore.initializeAuth()
+    }
+
+    // Verificar si la ruta requiere autenticación
+    const requiresAuth = to.matched.some((record) => record.meta.requiresAuth !== false)
+
+    if (requiresAuth && !authStore.isAuthenticated) {
+      // Redirigir a login si no está autenticado
+      next('/login')
+    } else if (to.path === '/login' && authStore.isAuthenticated) {
+      // Si ya está autenticado y trata de ir a login, redirigir al dashboard
+      next('/')
+    } else {
+      // Permitir navegación
+      next()
+    }
+  })
+
+  return Router
+})
