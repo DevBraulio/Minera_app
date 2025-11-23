@@ -64,6 +64,7 @@ export interface ConfiguracionPrecio {
   precio: number
   resultados_esperados: number
   estado?: number // 1 = activo, 0 = inactivo
+  activo?: number // API might return this instead of estado
   nombre_tipo_muestra?: string // For display purposes
   nombre_elemento?: string // For display purposes
   nombre_metodo?: string // For display purposes

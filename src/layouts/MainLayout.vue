@@ -92,16 +92,16 @@
         <!-- COMPROBANTES -->
         <q-expansion-item
           icon="receipt_long"
-          label="Comprobantes"
+          label="Guias"
           dense-toggle
           header-class="text-weight-medium"
         >
           <q-list dense class="nested-list">
-            <q-item clickable v-ripple to="/boletas/listar" class="nested-item">
+            <q-item clickable v-ripple to="/boletas/form" class="nested-item">
               <q-item-section avatar>
                 <q-icon name="receipt" size="sm" />
               </q-item-section>
-              <q-item-section>Boletas</q-item-section>
+              <q-item-section>Gestion de Guía</q-item-section>
             </q-item>
 
             <q-item clickable v-ripple to="/guias/listar" class="nested-item">
@@ -109,13 +109,6 @@
                 <q-icon name="list_alt" size="sm" />
               </q-item-section>
               <q-item-section>Listar Guías</q-item-section>
-            </q-item>
-
-            <q-item clickable v-ripple to="/guias/registrar" class="nested-item">
-              <q-item-section avatar>
-                <q-icon name="local_shipping" size="sm" />
-              </q-item-section>
-              <q-item-section>Registrar Guía</q-item-section>
             </q-item>
           </q-list>
         </q-expansion-item>

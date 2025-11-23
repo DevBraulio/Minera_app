@@ -332,10 +332,11 @@ async function cargarListas() {
   ----------------------------------- */
 async function cargarConfiguraciones() {
   const data = (await axios.get(`${API}/configuracion-precios`)).data
+  console.log('Configuraciones Data:', data) // DEBUG
 
   lista.value = data.map((item: ConfiguracionPrecio) => ({
     ...item,
-    estado: item.estado ?? 1, // Default to 1 (active) since GET only returns active records
+    estado: Number(item.estado !== undefined ? item.estado : item.activo), // Handle both fields
     nombre_tipo_muestra:
       tiposMuestra.value.find((t) => t.id == item.id_tipo_muestra)?.tipo_muestra || '—',
     nombre_elemento: elementos.value.find((e) => e.id == item.id_elemento)?.tipo_elemento || '—',

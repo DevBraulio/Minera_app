@@ -2,14 +2,13 @@
 
 **Base URL:** `https://cifradosdev.com/certi_minera_backend/public`
 
-Esta documentación ha sido extraída de la definición Swagger proporcionada.
+Esta documentación ha sido actualizada basada en la definición Swagger proporcionada.
 
 ## 1. Certificados
 
 ### Listar todos los certificados
 
 - **GET** `/certificado/certificados`
-- **Respuesta:** Lista de certificados.
 
 ### Crear un certificado
 
@@ -26,19 +25,10 @@ Esta documentación ha sido extraída de la definición Swagger proporcionada.
 ### Obtener un certificado por ID
 
 - **GET** `/certificado/certificados/{id}`
-- **Parámetros:** `id` (integer)
 
 ### Actualizar un certificado
 
 - **PUT** `/certificado/certificados/{id}`
-- **Body:**
-  ```json
-  {
-    "codigo_certificado": "CIF_2025_002",
-    "co_guia": 999,
-    "id_configuracion": 7
-  }
-  ```
 
 ### Eliminar un certificado
 
@@ -73,12 +63,6 @@ Esta documentación ha sido extraída de la definición Swagger proporcionada.
 ### Actualizar un detalle
 
 - **PUT** `/certificado/certificado_detalle/{id}`
-- **Body:**
-  ```json
-  {
-    "valor_obtenido": 9.99
-  }
-  ```
 
 ### Eliminar un detalle
 
@@ -106,7 +90,6 @@ Esta documentación ha sido extraída de la definición Swagger proporcionada.
 ### Actualizar un cliente por ID
 
 - **PUT** `/clientes/actualizar/{id}`
-- **Body:** (Mismo esquema que guardar)
 
 ### Listar todos los clientes activos
 
@@ -127,7 +110,7 @@ Esta documentación ha sido extraída de la definición Swagger proporcionada.
 ### Buscar cliente por texto
 
 - **GET** `/clientes/buscar`
-- **Parámetros:** `q` (string) - Busca por nombre, RUC, código, email, teléfono.
+- **Parámetros:** `q` (string)
 
 ---
 
@@ -217,14 +200,6 @@ Esta documentación ha sido extraída de la definición Swagger proporcionada.
 ### Actualizar una configuración
 
 - **PUT** `/configuracion-precios/{id}`
-- **Body:**
-  ```json
-  {
-    "nombre_comercial": "Análisis Plata Premium",
-    "precio": 180,
-    "resultados_esperados": 7
-  }
-  ```
 
 ### Eliminar una configuración (inactivar)
 
@@ -271,15 +246,6 @@ Esta documentación ha sido extraída de la definición Swagger proporcionada.
 ### Actualizar un resultado
 
 - **PUT** `/configuracion-precios/resultados/{id}`
-- **Body:**
-  ```json
-  {
-    "nombre_resultado": "C",
-    "orden": 2,
-    "visible": 1,
-    "formula": "B - A"
-  }
-  ```
 
 ### Eliminar un resultado
 
@@ -296,22 +262,10 @@ Esta documentación ha sido extraída de la definición Swagger proporcionada.
 ### Crear un nuevo elemento
 
 - **POST** `/elemento`
-- **Body:**
-  ```json
-  {
-    "tipo_elemento": "Oro"
-  }
-  ```
 
 ### Actualizar un elemento
 
 - **PUT** `/elemento/{id}`
-- **Body:**
-  ```json
-  {
-    "tipo_elemento": "Plata"
-  }
-  ```
 
 ### Eliminar un elemento (inactivar)
 
@@ -332,22 +286,10 @@ Esta documentación ha sido extraída de la definición Swagger proporcionada.
 ### Crear un nuevo método
 
 - **POST** `/marcha-metodo`
-- **Body:**
-  ```json
-  {
-    "metodo": "Ensayo químico"
-  }
-  ```
 
 ### Actualizar un método
 
 - **PUT** `/marcha-metodo/{id}`
-- **Body:**
-  ```json
-  {
-    "metodo": "Prueba térmica"
-  }
-  ```
 
 ### Eliminar un método (inactivar)
 
@@ -368,22 +310,10 @@ Esta documentación ha sido extraída de la definición Swagger proporcionada.
 ### Crear un nuevo tipo de muestra
 
 - **POST** `/tipo-muestra`
-- **Body:**
-  ```json
-  {
-    "tipo_muestra": "Mineral"
-  }
-  ```
 
 ### Actualizar un tipo de muestra
 
 - **PUT** `/tipo-muestra/{id}`
-- **Body:**
-  ```json
-  {
-    "tipo_muestra": "Roca"
-  }
-  ```
 
 ### Eliminar un tipo de muestra (inactivar)
 
@@ -400,15 +330,6 @@ Esta documentación ha sido extraída de la definición Swagger proporcionada.
 ### Registrar un nuevo usuario
 
 - **POST** `/usuarios/registrar`
-- **Body:**
-  ```json
-  {
-    "nombre": "Jaime Supo",
-    "usuario": "jaimesupo",
-    "contraseña": "123456",
-    "cargo": "Admin"
-  }
-  ```
 
 ### Listar todos los usuarios activos
 
@@ -429,10 +350,3 @@ Esta documentación ha sido extraída de la definición Swagger proporcionada.
 ### Autenticación de usuario (Login)
 
 - **POST** `/usuarios/login`
-- **Body:**
-  ```json
-  {
-    "usuario": "jaimesupo",
-    "contraseña": "123456"
-  }
-  ```

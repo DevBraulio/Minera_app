@@ -4,7 +4,7 @@
     <div class="page-header">
       <h4 class="text-h4">
         <q-icon name="receipt_long" class="q-mr-sm" />
-        Listado de Boletas
+        Listado de Boletas/Guías
       </h4>
       <q-btn
         color="primary"

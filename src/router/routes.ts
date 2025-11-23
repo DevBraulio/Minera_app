@@ -38,13 +38,14 @@ const routes: RouteRecordRaw[] = [
         path: '/configuracion-precios/:id/resultados',
         component: () => import('pages/configuraciones/ConfiguracionResultados.vue'),
       },
-      {
-        path: '/guias/registrar',
-        component: () => import('pages/clientes/RegistrarGuia.vue'),
-      },
+
       {
         path: '/guias/Listar',
         component: () => import('pages/comprobantes/ListarGuia.vue'),
+      },
+      {
+        path: '/boletas/form',
+        component: () => import('pages/comprobantes/GuiaForm.vue'),
       },
     ],
   },
