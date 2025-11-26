@@ -1,8 +1,13 @@
 export interface Certificado {
   id?: number
   codigo_certificado: string
-  co_guia: number
-  id_configuracion: number
+  Num_Boleta?: string
+  id_usuario?: number
+  created_at?: string
+  updated_at?: string
+  // Campos antiguos (mantener si son necesarios para otros endpoints, o marcar opcionales)
+  co_guia?: number
+  id_configuracion?: number
 }
 
 export interface DetalleCertificado {

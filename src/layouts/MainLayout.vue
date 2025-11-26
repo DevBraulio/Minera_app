@@ -5,7 +5,7 @@
       <q-toolbar>
         <q-btn flat dense round icon="menu" @click="toggleLeftDrawer" />
 
-        <q-toolbar-title>Sistema Minera</q-toolbar-title>
+        <q-toolbar-title>{{ configStore.config.nombre_sistema }}</q-toolbar-title>
 
         <!-- Usuario actual -->
         <div v-if="authStore.currentUser" class="row items-center q-gutter-sm">
@@ -28,115 +28,133 @@
 
     <!-- DRAWER -->
     <q-drawer v-model="leftDrawerOpen" show-if-above bordered class="modern-drawer">
-      <q-list padding class="text-grey-9">
-        <q-item-label header class="text-primary text-bold text-subtitle1">
-          <q-icon name="business" size="sm" class="q-mr-sm" />
-          Sistema Minera
-        </q-item-label>
+      <div class="column full-height">
+        <q-list padding class="text-grey-9 col-grow">
+          <q-item-label header class="text-primary text-bold text-subtitle1 row items-center">
+            <q-avatar size="32px" class="q-mr-sm" v-if="configStore.config.logo">
+              <img :src="configStore.config.logo" />
+            </q-avatar>
+            <q-icon v-else name="business" size="sm" class="q-mr-sm" />
+            {{ configStore.config.nombre_sistema }}
+          </q-item-label>
 
-        <!-- INICIO -->
-        <q-item clickable v-ripple to="/" exact class="menu-item">
-          <q-item-section avatar>
-            <q-icon name="home" />
-          </q-item-section>
-          <q-item-section>
-            <q-item-label>Inicio</q-item-label>
-          </q-item-section>
-        </q-item>
+          <!-- INICIO -->
+          <q-item clickable v-ripple to="/" exact class="menu-item">
+            <q-item-section avatar>
+              <q-icon name="home" />
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>Inicio</q-item-label>
+            </q-item-section>
+          </q-item>
 
-        <q-separator class="q-my-md" />
+          <q-separator class="q-my-md" />
 
-        <!-- USUARIOS -->
-        <q-item clickable v-ripple to="/usuarios/listar" class="menu-item">
-          <q-item-section avatar>
-            <q-icon name="group" />
-          </q-item-section>
-          <q-item-section>
-            <q-item-label>Usuarios</q-item-label>
-          </q-item-section>
-        </q-item>
+          <!-- USUARIOS -->
+          <q-item clickable v-ripple to="/usuarios/listar" class="menu-item">
+            <q-item-section avatar>
+              <q-icon name="group" />
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>Usuarios</q-item-label>
+            </q-item-section>
+          </q-item>
 
-        <!-- CLIENTES -->
-        <q-item clickable v-ripple to="/clientes/listar" class="menu-item">
-          <q-item-section avatar>
-            <q-icon name="account_circle" />
-          </q-item-section>
-          <q-item-section>
-            <q-item-label>Clientes</q-item-label>
-          </q-item-section>
-        </q-item>
+          <!-- CLIENTES -->
+          <q-item clickable v-ripple to="/clientes/listar" class="menu-item">
+            <q-item-section avatar>
+              <q-icon name="account_circle" />
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>Clientes</q-item-label>
+            </q-item-section>
+          </q-item>
 
-        <q-expansion-item
-          icon="settings"
-          label="Configuraciones"
-          dense-toggle
-          header-class="text-weight-medium"
-        >
-          <q-list dense class="nested-list">
-            <q-item clickable v-ripple to="/panel-configuracion" class="nested-item">
-              <q-item-section avatar>
-                <q-icon name="tune" size="sm" />
-              </q-item-section>
-              <q-item-section>Panel de Configuración</q-item-section>
-            </q-item>
+          <q-expansion-item
+            icon="settings"
+            label="Configuraciones"
+            dense-toggle
+            header-class="text-weight-medium"
+          >
+            <q-list dense class="nested-list">
+              <q-item clickable v-ripple to="/panel-configuracion" class="nested-item">
+                <q-item-section avatar>
+                  <q-icon name="tune" size="sm" />
+                </q-item-section>
+                <q-item-section>Panel de Configuración</q-item-section>
+              </q-item>
 
-            <q-item clickable v-ripple to="/configuracion-precios" class="nested-item">
-              <q-item-section avatar>
-                <q-icon name="attach_money" size="sm" />
-              </q-item-section>
-              <q-item-section>Configuración Precios</q-item-section>
-            </q-item>
-          </q-list>
-        </q-expansion-item>
+              <q-item clickable v-ripple to="/configuracion-precios" class="nested-item">
+                <q-item-section avatar>
+                  <q-icon name="attach_money" size="sm" />
+                </q-item-section>
+                <q-item-section>Configuración Precios</q-item-section>
+              </q-item>
+            </q-list>
+          </q-expansion-item>
 
-        <!-- COMPROBANTES -->
-        <q-expansion-item
-          icon="receipt_long"
-          label="Guias"
-          dense-toggle
-          header-class="text-weight-medium"
-        >
-          <q-list dense class="nested-list">
-            <q-item clickable v-ripple to="/boletas/form" class="nested-item">
-              <q-item-section avatar>
-                <q-icon name="receipt" size="sm" />
-              </q-item-section>
-              <q-item-section>Gestion de Guía</q-item-section>
-            </q-item>
+          <!-- COMPROBANTES -->
+          <q-expansion-item
+            icon="receipt_long"
+            label="Guias"
+            dense-toggle
+            header-class="text-weight-medium"
+          >
+            <q-list dense class="nested-list">
+              <q-item clickable v-ripple to="/boletas/form" class="nested-item">
+                <q-item-section avatar>
+                  <q-icon name="receipt" size="sm" />
+                </q-item-section>
+                <q-item-section>Gestion de Guía</q-item-section>
+              </q-item>
 
-            <q-item clickable v-ripple to="/guias/listar" class="nested-item">
-              <q-item-section avatar>
-                <q-icon name="list_alt" size="sm" />
-              </q-item-section>
-              <q-item-section>Listar Guías</q-item-section>
-            </q-item>
-          </q-list>
-        </q-expansion-item>
+              <q-item clickable v-ripple to="/guias/listar" class="nested-item">
+                <q-item-section avatar>
+                  <q-icon name="list_alt" size="sm" />
+                </q-item-section>
+                <q-item-section>Listar Guías</q-item-section>
+              </q-item>
+            </q-list>
+          </q-expansion-item>
 
-        <!-- CERTIFICADOS -->
-        <q-expansion-item
-          icon="verified"
-          label="Certificados"
-          dense-toggle
-          header-class="text-weight-medium"
-        >
-          <q-list dense class="nested-list">
-            <q-item clickable v-ripple to="/certificados/listar" class="nested-item">
-              <q-item-section avatar>
-                <q-icon name="verified_user" size="sm" />
-              </q-item-section>
-              <q-item-section>Listar Certificados</q-item-section>
-            </q-item>
+          <!-- CERTIFICADOS -->
+          <q-expansion-item
+            icon="verified"
+            label="Certificados"
+            dense-toggle
+            header-class="text-weight-medium"
+          >
+            <q-list dense class="nested-list">
+              <q-item clickable v-ripple to="/certificados/crear" class="nested-item">
+                <q-item-section avatar>
+                  <q-icon name="add_card" size="sm" />
+                </q-item-section>
+                <q-item-section>Crear Certificado</q-item-section>
+              </q-item>
 
-            <q-item clickable v-ripple to="/certificados/crear" class="nested-item">
-              <q-item-section avatar>
-                <q-icon name="add_card" size="sm" />
-              </q-item-section>
-              <q-item-section>Crear Certificado</q-item-section>
-            </q-item>
-          </q-list>
-        </q-expansion-item>
-      </q-list>
+              <q-item clickable v-ripple to="/certificados/listar" class="nested-item">
+                <q-item-section avatar>
+                  <q-icon name="verified_user" size="sm" />
+                </q-item-section>
+                <q-item-section>Listar Certificados</q-item-section>
+              </q-item>
+            </q-list>
+          </q-expansion-item>
+        </q-list>
+
+        <!-- FOOTER CONFIG -->
+        <q-separator />
+        <div class="q-pa-md">
+          <q-btn
+            outline
+            color="primary"
+            class="full-width"
+            label="Configuración Sistema"
+            icon="settings"
+            to="/configuracion-sistema"
+          />
+        </div>
+      </div>
     </q-drawer>
 
     <!-- PAGE CONTENT -->
@@ -147,15 +165,21 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from 'src/stores/auth'
+import { useSystemConfigStore } from 'src/stores/systemConfig'
 import { Dialog } from 'quasar'
 
 const router = useRouter()
 const authStore = useAuthStore()
+const configStore = useSystemConfigStore()
 
 const leftDrawerOpen = ref(false)
+
+onMounted(() => {
+  void configStore.fetchConfig()
+})
 
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value

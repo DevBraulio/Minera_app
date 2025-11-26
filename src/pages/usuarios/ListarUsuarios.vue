@@ -9,11 +9,11 @@
       <q-btn
         unelevated
         rounded
-        color="accent"
+        color="primary"
         icon="person_add"
         label="Registrar Usuario"
         @click="abrirCrear"
-        class="btn-accent"
+        class="btn-primary"
       />
     </div>
 
@@ -53,7 +53,7 @@
 
     <!-- DIALOG CREAR/EDITAR -->
     <q-dialog v-model="dialog">
-      <q-card style="min-width: 450px" class="form-card">
+      <q-card style="min-width: 600px" class="form-card">
         <q-card-section class="bg-primary text-white">
           <div class="text-h6">
             <q-icon :name="editando ? 'edit' : 'person_add'" class="q-mr-sm" />
@@ -61,54 +61,77 @@
           </div>
         </q-card-section>
 
-        <q-card-section class="q-gutter-md">
-          <q-input filled v-model="form.nombre" label="Nombre Completo" class="input-modern">
-            <template v-slot:prepend>
-              <q-icon name="person" />
-            </template>
-          </q-input>
+        <q-card-section class="q-pa-lg">
+          <div class="row q-col-gutter-md">
+            <div class="col-12">
+              <q-input
+                filled
+                v-model="form.nombre"
+                label="Nombre Completo"
+                class="input-modern"
+                :rules="[(val) => !!val || 'Campo requerido']"
+              >
+                <template v-slot:prepend>
+                  <q-icon name="person" />
+                </template>
+              </q-input>
+            </div>
 
-          <q-input filled v-model="form.usuario" label="Usuario" class="input-modern">
-            <template v-slot:prepend>
-              <q-icon name="account_circle" />
-            </template>
-          </q-input>
+            <div class="col-12 col-md-6">
+              <q-input
+                filled
+                v-model="form.usuario"
+                label="Usuario"
+                class="input-modern"
+                :rules="[(val) => !!val || 'Campo requerido']"
+              >
+                <template v-slot:prepend>
+                  <q-icon name="account_circle" />
+                </template>
+              </q-input>
+            </div>
 
-          <q-input
-            filled
-            v-model="form.contraseña"
-            label="Contraseña"
-            type="password"
-            class="input-modern"
-          >
-            <template v-slot:prepend>
-              <q-icon name="lock" />
-            </template>
-          </q-input>
+            <div class="col-12 col-md-6">
+              <q-input
+                filled
+                v-model="form.contraseña"
+                label="Contraseña"
+                type="password"
+                class="input-modern"
+              >
+                <template v-slot:prepend>
+                  <q-icon name="lock" />
+                </template>
+              </q-input>
+            </div>
 
-          <q-select
-            filled
-            v-model="form.cargo"
-            :options="opcionesCargo"
-            label="Cargo"
-            class="input-modern"
-          >
-            <template v-slot:prepend>
-              <q-icon name="work" />
-            </template>
-          </q-select>
+            <div class="col-12">
+              <q-select
+                filled
+                v-model="form.cargo"
+                :options="opcionesCargo"
+                label="Cargo"
+                class="input-modern"
+                :rules="[(val) => !!val || 'Campo requerido']"
+              >
+                <template v-slot:prepend>
+                  <q-icon name="work" />
+                </template>
+              </q-select>
+            </div>
+          </div>
         </q-card-section>
 
-        <q-card-actions align="right" class="q-pa-md">
+        <q-card-actions align="right" class="q-pa-md bg-grey-1">
           <q-btn flat label="Cancelar" color="grey-7" v-close-popup />
           <q-btn
             unelevated
             rounded
             label="Guardar"
-            color="accent"
+            color="primary"
             @click="guardar"
             :loading="loading"
-            class="btn-accent"
+            class="btn-primary"
           />
         </q-card-actions>
       </q-card>

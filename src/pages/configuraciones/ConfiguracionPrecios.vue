@@ -184,7 +184,8 @@
             dense
             v-model.number="configuracionForm.resultados_esperados"
             type="number"
-            label="Cantidad de resultados"
+            label="Cantidad"
+            hint="Cantidad de resultados esperados"
             class="input-modern q-mb-md"
           >
             <template v-slot:prepend>
@@ -296,7 +297,7 @@ const columns: QTableProps['columns'] = [
     sortable: true,
   },
   { name: 'precio', label: 'Precio', field: 'precio', align: 'right' as const, sortable: true },
-  { name: 'dias', label: 'Días', field: 'resultados_esperados', align: 'center' as const },
+  { name: 'dias', label: 'Cantidad', field: 'resultados_esperados', align: 'center' as const },
   { name: 'estado', label: 'Estado', field: 'estado', align: 'center' as const },
   { name: 'acciones', label: 'Acciones', field: 'acciones', align: 'center' as const },
 ]

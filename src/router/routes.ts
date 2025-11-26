@@ -38,6 +38,10 @@ const routes: RouteRecordRaw[] = [
         path: '/configuracion-precios/:id/resultados',
         component: () => import('pages/configuraciones/ConfiguracionResultados.vue'),
       },
+      {
+        path: '/configuracion-sistema',
+        component: () => import('pages/configuraciones/ConfiguracionSistema.vue'),
+      },
 
       {
         path: '/guias/Listar',
@@ -46,6 +50,14 @@ const routes: RouteRecordRaw[] = [
       {
         path: '/boletas/form',
         component: () => import('pages/comprobantes/GuiaForm.vue'),
+      },
+      {
+        path: '/certificados/crear',
+        component: () => import('pages/certificados/CrearCertificado.vue'),
+      },
+      {
+        path: '/certificados/listar',
+        component: () => import('pages/certificados/ListarCertificados.vue'),
       },
     ],
   },

@@ -9,11 +9,11 @@
       <q-btn
         unelevated
         rounded
-        color="accent"
+        color="primary"
         icon="person_add"
         label="Registrar Cliente"
         @click="abrirCrear"
-        class="btn-accent"
+        class="btn-primary"
       />
     </div>
 
@@ -36,7 +36,8 @@
         row-key="id_cliente"
         flat
         :rows-per-page-options="[10, 20, 50]"
-        class="modern-table"
+        class="modern-table cursor-pointer"
+        @row-click="verDetalle"
       >
         <template v-slot:body-cell-acciones="props">
           <q-td>
@@ -47,7 +48,7 @@
               flat
               color="primary"
               icon="edit"
-              @click="abrirEditar(props.row)"
+              @click.stop="abrirEditar(props.row)"
               class="q-mr-sm"
             >
               <q-tooltip>Editar cliente</q-tooltip>
@@ -60,7 +61,7 @@
               flat
               color="negative"
               icon="delete"
-              @click="eliminar(props.row.id_cliente)"
+              @click.stop="eliminar(props.row.id_cliente)"
             >
               <q-tooltip>Eliminar cliente</q-tooltip>
             </q-btn>
@@ -71,15 +72,15 @@
 
     <!-- DIALOG CREAR/EDITAR -->
     <q-dialog v-model="dialog" persistent>
-      <q-card style="min-width: 600px" class="dialog-card">
-        <q-card-section class="dialog-title">
+      <q-card style="min-width: 700px" class="dialog-card">
+        <q-card-section class="bg-primary text-white">
           <div class="text-h6">
             <q-icon :name="editando ? 'edit' : 'person_add'" class="q-mr-sm" />
             {{ editando ? 'Editar Cliente' : 'Registrar Cliente' }}
           </div>
         </q-card-section>
 
-        <q-card-section class="q-gutter-md">
+        <q-card-section class="q-pa-lg">
           <div class="row q-col-gutter-md">
             <div class="col-12">
               <q-input
@@ -87,6 +88,7 @@
                 v-model="form.nom_cliente"
                 label="Nombre Completo"
                 class="input-modern"
+                :rules="[(val) => !!val || 'Campo requerido']"
               >
                 <template v-slot:prepend>
                   <q-icon name="person" />
@@ -94,7 +96,7 @@
               </q-input>
             </div>
 
-            <div class="col-6">
+            <div class="col-12 col-md-6">
               <q-input filled v-model="form.ruc_cliente" label="RUC" class="input-modern">
                 <template v-slot:prepend>
                   <q-icon name="badge" />
@@ -102,7 +104,7 @@
               </q-input>
             </div>
 
-            <div class="col-6">
+            <div class="col-12 col-md-6">
               <q-input filled v-model="form.tel_cliente" label="Teléfono" class="input-modern">
                 <template v-slot:prepend>
                   <q-icon name="phone" />
@@ -110,18 +112,10 @@
               </q-input>
             </div>
 
-            <div class="col-12">
+            <div class="col-12 col-md-6">
               <q-input filled v-model="form.email" label="Email" type="email" class="input-modern">
                 <template v-slot:prepend>
                   <q-icon name="email" />
-                </template>
-              </q-input>
-            </div>
-
-            <div class="col-12">
-              <q-input filled v-model="form.direccion" label="Dirección" class="input-modern">
-                <template v-slot:prepend>
-                  <q-icon name="location_on" />
                 </template>
               </q-input>
             </div>
@@ -143,17 +137,89 @@
           </div>
         </q-card-section>
 
-        <q-card-actions align="right" class="q-pa-md">
+        <q-card-actions align="right" class="q-pa-md bg-grey-1">
           <q-btn flat label="Cancelar" color="grey-7" v-close-popup />
           <q-btn
             unelevated
             rounded
             label="Guardar"
-            color="accent"
+            color="primary"
             @click="guardar"
             :loading="loading"
-            class="btn-accent"
+            class="btn-primary"
           />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
+    <!-- DIALOG DETALLE CLIENTE -->
+    <q-dialog v-model="showDetalleDialog">
+      <q-card style="min-width: 500px; max-width: 90vw">
+        <q-card-section class="bg-primary text-white row items-center">
+          <div class="text-h6">
+            <q-icon name="person" class="q-mr-sm" />
+            Detalle del Cliente
+          </div>
+          <q-space />
+          <q-btn icon="close" flat round dense v-close-popup class="text-white" />
+        </q-card-section>
+
+        <q-card-section class="q-pa-lg">
+          <div class="row q-col-gutter-md">
+            <div class="col-12">
+              <q-item>
+                <q-item-section avatar>
+                  <q-avatar color="primary" text-color="white" icon="person" />
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label caption>Nombre Completo</q-item-label>
+                  <q-item-label class="text-h6">{{
+                    clienteSeleccionado?.nom_cliente
+                  }}</q-item-label>
+                </q-item-section>
+              </q-item>
+            </div>
+
+            <div class="col-6">
+              <q-item>
+                <q-item-section>
+                  <q-item-label caption>RUC</q-item-label>
+                  <q-item-label>{{ clienteSeleccionado?.ruc_cliente || '---' }}</q-item-label>
+                </q-item-section>
+              </q-item>
+            </div>
+
+            <div class="col-6">
+              <q-item>
+                <q-item-section>
+                  <q-item-label caption>Teléfono</q-item-label>
+                  <q-item-label>{{ clienteSeleccionado?.tel_cliente || '---' }}</q-item-label>
+                </q-item-section>
+              </q-item>
+            </div>
+
+            <div class="col-12">
+              <q-item>
+                <q-item-section>
+                  <q-item-label caption>Email</q-item-label>
+                  <q-item-label>{{ clienteSeleccionado?.email || '---' }}</q-item-label>
+                </q-item-section>
+              </q-item>
+            </div>
+
+            <div class="col-12" v-if="clienteSeleccionado?.observaciones">
+              <q-item>
+                <q-item-section>
+                  <q-item-label caption>Observaciones</q-item-label>
+                  <q-item-label>{{ clienteSeleccionado?.observaciones }}</q-item-label>
+                </q-item-section>
+              </q-item>
+            </div>
+          </div>
+        </q-card-section>
+
+        <q-card-actions align="right" class="q-pa-md bg-grey-1">
+          <q-btn flat label="Cerrar" color="primary" v-close-popup />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -173,7 +239,6 @@ interface Cliente {
   ruc_cliente: string
   tel_cliente: string
   email: string
-  direccion?: string | undefined
   fech_ingreso?: string | undefined
   observaciones?: string | undefined
   estado?: number | undefined
@@ -185,13 +250,17 @@ const loading = ref(false)
 const editando = ref(false)
 const filtro = ref('')
 
+// Detalle
+const showDetalleDialog = ref(false)
+const clienteSeleccionado = ref<Cliente | null>(null)
+
 const form = ref<Cliente>({
   id_cliente: undefined,
   nom_cliente: '',
   ruc_cliente: '',
   tel_cliente: '',
   email: '',
-  direccion: '',
+
   observaciones: '',
 })
 
@@ -207,7 +276,7 @@ const columnas = [
   { name: 'ruc_cliente', label: 'RUC', field: 'ruc_cliente', align: 'left' as const },
   { name: 'tel_cliente', label: 'Teléfono', field: 'tel_cliente', align: 'left' as const },
   { name: 'email', label: 'Email', field: 'email', align: 'left' as const },
-  { name: 'direccion', label: 'Dirección', field: 'direccion', align: 'left' as const },
+
   { name: 'acciones', label: 'Acciones', field: 'acciones', align: 'center' as const },
 ]
 
@@ -249,7 +318,7 @@ function abrirCrear() {
     ruc_cliente: '',
     tel_cliente: '',
     email: '',
-    direccion: '',
+
     observaciones: '',
   }
   dialog.value = true
@@ -264,10 +333,16 @@ function abrirEditar(cliente: Cliente) {
     ruc_cliente: cliente.ruc_cliente,
     tel_cliente: cliente.tel_cliente,
     email: cliente.email,
-    direccion: cliente.direccion || '',
+
     observaciones: cliente.observaciones || '',
   }
   dialog.value = true
+}
+
+// Ver Detalle
+function verDetalle(_: unknown, row: Cliente) {
+  clienteSeleccionado.value = row
+  showDetalleDialog.value = true
 }
 
 // GUARDAR

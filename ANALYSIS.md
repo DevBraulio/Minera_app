@@ -10,15 +10,26 @@ Esta documentación ha sido actualizada basada en la definición Swagger proporc
 
 - **GET** `/certificado/certificados`
 
-### Crear un certificado
+### Crear un certificado automáticamente desde una boleta
 
 - **POST** `/certificado/certificados`
+- **Descripción:** Crea un certificado con código correlativo FRI-CER-año-XXXXXX y genera automáticamente sus detalles según la configuración.
 - **Body:**
   ```json
   {
-    "codigo_certificado": "CIF_2025_001",
-    "co_guia": 123,
-    "id_configuracion": 5
+    "Num_Boleta": "FRI-2025-000001",
+    "id_usuario": 1
+  }
+  ```
+- **Respuesta exitosa (201):**
+  ```json
+  {
+    "success": true,
+    "id_certificado": 15,
+    "codigo_certificado": "FRI-CER-2025-000001",
+    "cantidad_detalles": 3,
+    "num_guias_procesadas": 2,
+    "detalles_creados": 2
   }
   ```
 
@@ -350,3 +361,46 @@ Esta documentación ha sido actualizada basada en la definición Swagger proporc
 ### Autenticación de usuario (Login)
 
 - **POST** `/usuarios/login`
+
+---
+
+## 12. Configuración del Sistema
+
+### Obtener configuración actual
+
+- **GET** `/sistema-config`
+
+### Guardar o actualizar configuración
+
+- **POST** `/sistema-config/guardar`
+- **Body:**
+  ```json
+  {
+    "nombre_empresa": "Minera S.A.",
+    "ruc": "20123456789",
+    "direccion": "Av. Principal 123",
+    "telefono": "012345678",
+    "email": "contacto@minera.com",
+    "web": "www.minera.com"
+  }
+  ```
+
+### Subir archivos (logo, firma, sello)
+
+- **POST** `/sistema-config/upload`
+- **Body:** `FormData`
+  - `logo`: File
+  - `firma`: File
+  - `sello`: File
+
+---
+
+## 13. Impresiones
+
+### Generar impresión unificada
+
+- **GET** `/impresiones/generar`
+- **Parámetros:**
+  - `id_guia` (integer, opcional)
+  - `id_boleta` (integer, opcional)
+  - `id_certificado` (integer, opcional)

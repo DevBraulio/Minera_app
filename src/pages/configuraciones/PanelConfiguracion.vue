@@ -11,281 +11,230 @@
       </div>
     </div>
 
-    <!-- ACTION BUTTONS -->
-    <div class="action-buttons">
-      <q-btn
-        unelevated
-        rounded
-        color="primary"
-        icon="add"
-        label="Nuevo Tipo de Muestra"
-        @click="abrirDialogTipoMuestra"
-        class="btn-action"
-      />
-      <q-btn
-        unelevated
-        rounded
-        color="primary"
-        icon="add"
-        label="Nuevo Elemento"
-        @click="abrirDialogElemento"
-        class="btn-action"
-      />
-      <q-btn
-        unelevated
-        rounded
-        color="primary"
-        icon="add"
-        label="Nuevo Método"
-        @click="abrirDialogMarcha"
-        class="btn-action"
-      />
+    <!-- 3-COLUMN LAYOUT -->
+    <div class="row q-col-gutter-md">
+      <!-- COLUMN 1: TIPOS DE MUESTRA -->
+      <div class="col-12 col-md-4">
+        <!-- CARD 1: FORMULARIO -->
+        <q-card class="column-card q-mb-md">
+          <q-card-section class="bg-primary text-white">
+            <div class="text-subtitle1 text-weight-bold row items-center">
+              <q-icon name="biotech" class="q-mr-sm" />
+              Tipos de Muestra
+            </div>
+          </q-card-section>
+
+          <q-card-section class="q-pa-md">
+            <div class="row q-col-gutter-sm items-center">
+              <div class="col">
+                <q-input
+                  filled
+                  dense
+                  v-model="tipoMuestraForm.tipo_muestra"
+                  label="Nombre"
+                  class="input-modern"
+                  @keyup.enter="guardarTipoMuestra"
+                />
+              </div>
+              <div class="col-auto">
+                <q-btn round dense flat icon="check" color="primary" @click="guardarTipoMuestra">
+                  <q-tooltip>{{ tipoMuestraForm.id ? 'Actualizar' : 'Guardar' }}</q-tooltip>
+                </q-btn>
+                <q-btn
+                  v-if="tipoMuestraForm.id || tipoMuestraForm.tipo_muestra"
+                  round
+                  dense
+                  flat
+                  icon="close"
+                  color="grey-7"
+                  @click="cancelarTipoMuestra"
+                >
+                  <q-tooltip>Cancelar</q-tooltip>
+                </q-btn>
+              </div>
+            </div>
+          </q-card-section>
+        </q-card>
+
+        <!-- CARD 2: TABLA -->
+        <q-card class="column-card">
+          <q-card-section class="q-pa-none">
+            <q-table
+              :rows="tiposMuestra"
+              :columns="colTipoMuestra"
+              dense
+              flat
+              row-key="id"
+              :rows-per-page-options="[10, 20, 50]"
+              :pagination="{ rowsPerPage: 10 }"
+              class="sticky-header-table cursor-pointer"
+              @row-click="(evt, row) => editarTipoMuestra(row)"
+            >
+              <template #body-cell-acciones="props">
+                <q-td class="text-center">
+                  <q-btn
+                    flat
+                    dense
+                    label="Eliminar"
+                    color="negative"
+                    size="sm"
+                    @click.stop="confirmarEliminarTipoMuestra(props.row.id)"
+                  />
+                </q-td>
+              </template>
+            </q-table>
+          </q-card-section>
+        </q-card>
+      </div>
+
+      <!-- COLUMN 2: ELEMENTOS -->
+      <div class="col-12 col-md-4">
+        <!-- CARD 1: FORMULARIO -->
+        <q-card class="column-card q-mb-md">
+          <q-card-section class="bg-primary text-white">
+            <div class="text-subtitle1 text-weight-bold row items-center">
+              <q-icon name="category" class="q-mr-sm" />
+              Elementos
+            </div>
+          </q-card-section>
+
+          <q-card-section class="q-pa-md">
+            <div class="row q-col-gutter-sm items-center">
+              <div class="col">
+                <q-input
+                  filled
+                  dense
+                  v-model="elementoForm.tipo_elemento"
+                  label="Nombre"
+                  class="input-modern"
+                  @keyup.enter="guardarElemento"
+                />
+              </div>
+              <div class="col-auto">
+                <q-btn round dense flat icon="check" color="primary" @click="guardarElemento">
+                  <q-tooltip>{{ elementoForm.id ? 'Actualizar' : 'Guardar' }}</q-tooltip>
+                </q-btn>
+                <q-btn
+                  v-if="elementoForm.id || elementoForm.tipo_elemento"
+                  round
+                  dense
+                  flat
+                  icon="close"
+                  color="grey-7"
+                  @click="cancelarElemento"
+                >
+                  <q-tooltip>Cancelar</q-tooltip>
+                </q-btn>
+              </div>
+            </div>
+          </q-card-section>
+        </q-card>
+
+        <!-- CARD 2: TABLA -->
+        <q-card class="column-card">
+          <q-card-section class="q-pa-none">
+            <q-table
+              :rows="elementos"
+              :columns="colElemento"
+              dense
+              flat
+              row-key="id"
+              :rows-per-page-options="[10, 20, 50]"
+              :pagination="{ rowsPerPage: 10 }"
+              class="sticky-header-table cursor-pointer"
+              @row-click="(evt, row) => editarElemento(row)"
+            >
+              <template #body-cell-acciones="props">
+                <q-td class="text-center">
+                  <q-btn
+                    flat
+                    dense
+                    label="Eliminar"
+                    color="negative"
+                    size="sm"
+                    @click.stop="confirmarEliminarElemento(props.row.id)"
+                  />
+                </q-td>
+              </template>
+            </q-table>
+          </q-card-section>
+        </q-card>
+      </div>
+
+      <!-- COLUMN 3: MÉTODOS -->
+      <div class="col-12 col-md-4">
+        <!-- CARD 1: FORMULARIO -->
+        <q-card class="column-card q-mb-md">
+          <q-card-section class="bg-primary text-white">
+            <div class="text-subtitle1 text-weight-bold row items-center">
+              <q-icon name="precision_manufacturing" class="q-mr-sm" />
+              Métodos
+            </div>
+          </q-card-section>
+
+          <q-card-section class="q-pa-md">
+            <div class="row q-col-gutter-sm items-center">
+              <div class="col">
+                <q-input
+                  filled
+                  dense
+                  v-model="marchaForm.metodo"
+                  label="Nombre"
+                  class="input-modern"
+                  @keyup.enter="guardarMarchaMetodo"
+                />
+              </div>
+              <div class="col-auto">
+                <q-btn round dense flat icon="check" color="primary" @click="guardarMarchaMetodo">
+                  <q-tooltip>{{ marchaForm.id ? 'Actualizar' : 'Guardar' }}</q-tooltip>
+                </q-btn>
+                <q-btn
+                  v-if="marchaForm.id || marchaForm.metodo"
+                  round
+                  dense
+                  flat
+                  icon="close"
+                  color="grey-7"
+                  @click="cancelarMarcha"
+                >
+                  <q-tooltip>Cancelar</q-tooltip>
+                </q-btn>
+              </div>
+            </div>
+          </q-card-section>
+        </q-card>
+
+        <!-- CARD 2: TABLA -->
+        <q-card class="column-card">
+          <q-card-section class="q-pa-none">
+            <q-table
+              :rows="marchas"
+              :columns="colMarcha"
+              dense
+              flat
+              row-key="id"
+              :rows-per-page-options="[10, 20, 50]"
+              :pagination="{ rowsPerPage: 10 }"
+              class="sticky-header-table cursor-pointer"
+              @row-click="(evt, row) => editarMarchaMetodo(row)"
+            >
+              <template #body-cell-acciones="props">
+                <q-td class="text-center">
+                  <q-btn
+                    flat
+                    dense
+                    label="Eliminar"
+                    color="negative"
+                    size="sm"
+                    @click.stop="confirmarEliminarMarcha(props.row.id)"
+                  />
+                </q-td>
+              </template>
+            </q-table>
+          </q-card-section>
+        </q-card>
+      </div>
     </div>
-
-    <!-- UNIFIED TABLE WITH TABS -->
-    <div class="table-card">
-      <q-tabs
-        v-model="tabActual"
-        dense
-        class="text-grey"
-        active-color="primary"
-        indicator-color="accent"
-        align="left"
-      >
-        <q-tab name="tiposMuestra" icon="biotech" label="Tipos de Muestra" />
-        <q-tab name="elementos" icon="category" label="Elementos" />
-        <q-tab name="metodos" icon="precision_manufacturing" label="Métodos" />
-      </q-tabs>
-
-      <q-separator />
-
-      <q-tab-panels v-model="tabActual" animated>
-        <!-- TAB: TIPOS DE MUESTRA -->
-        <q-tab-panel name="tiposMuestra">
-          <q-table
-            :rows="tiposMuestra"
-            :columns="colTipoMuestra"
-            dense
-            flat
-            row-key="id"
-            :rows-per-page-options="[10, 20, 50]"
-            :pagination="{ rowsPerPage: 10 }"
-          >
-            <template #body-cell-acciones="props">
-              <q-td class="text-center">
-                <q-btn
-                  size="sm"
-                  round
-                  flat
-                  icon="edit"
-                  color="primary"
-                  @click="editarTipoMuestra(props.row)"
-                >
-                  <q-tooltip>Editar</q-tooltip>
-                </q-btn>
-                <q-btn
-                  size="sm"
-                  round
-                  flat
-                  icon="delete"
-                  color="negative"
-                  @click="confirmarEliminarTipoMuestra(props.row.id)"
-                >
-                  <q-tooltip>Eliminar</q-tooltip>
-                </q-btn>
-              </q-td>
-            </template>
-          </q-table>
-        </q-tab-panel>
-
-        <!-- TAB: ELEMENTOS -->
-        <q-tab-panel name="elementos">
-          <q-table
-            :rows="elementos"
-            :columns="colElemento"
-            dense
-            flat
-            row-key="id"
-            :rows-per-page-options="[10, 20, 50]"
-            :pagination="{ rowsPerPage: 10 }"
-          >
-            <template #body-cell-acciones="props">
-              <q-td class="text-center">
-                <q-btn
-                  size="sm"
-                  round
-                  flat
-                  icon="edit"
-                  color="primary"
-                  @click="editarElemento(props.row)"
-                >
-                  <q-tooltip>Editar</q-tooltip>
-                </q-btn>
-                <q-btn
-                  size="sm"
-                  round
-                  flat
-                  icon="delete"
-                  color="negative"
-                  @click="confirmarEliminarElemento(props.row.id)"
-                >
-                  <q-tooltip>Eliminar</q-tooltip>
-                </q-btn>
-              </q-td>
-            </template>
-          </q-table>
-        </q-tab-panel>
-
-        <!-- TAB: MÉTODOS -->
-        <q-tab-panel name="metodos">
-          <q-table
-            :rows="marchas"
-            :columns="colMarcha"
-            dense
-            flat
-            row-key="id"
-            :rows-per-page-options="[10, 20, 50]"
-            :pagination="{ rowsPerPage: 10 }"
-          >
-            <template #body-cell-acciones="props">
-              <q-td class="text-center">
-                <q-btn
-                  size="sm"
-                  round
-                  flat
-                  icon="edit"
-                  color="primary"
-                  @click="editarMarchaMetodo(props.row)"
-                >
-                  <q-tooltip>Editar</q-tooltip>
-                </q-btn>
-                <q-btn
-                  size="sm"
-                  round
-                  flat
-                  icon="delete"
-                  color="negative"
-                  @click="confirmarEliminarMarcha(props.row.id)"
-                >
-                  <q-tooltip>Eliminar</q-tooltip>
-                </q-btn>
-              </q-td>
-            </template>
-          </q-table>
-        </q-tab-panel>
-      </q-tab-panels>
-    </div>
-
-    <!-- DIALOG: TIPO MUESTRA -->
-    <q-dialog v-model="dialogTipoMuestra" persistent>
-      <q-card class="dialog-card">
-        <q-card-section class="dialog-title">
-          <div class="text-h6">
-            <q-icon name="biotech" class="q-mr-sm" />
-            {{ tipoMuestraForm.id ? 'Actualizar Tipo de Muestra' : 'Nuevo Tipo de Muestra' }}
-          </div>
-        </q-card-section>
-
-        <q-card-section>
-          <q-input
-            filled
-            v-model="tipoMuestraForm.tipo_muestra"
-            label="Nombre del tipo de muestra"
-            class="input-modern"
-            :rules="[(val) => !!val || 'Campo requerido']"
-            autofocus
-          >
-            <template v-slot:prepend>
-              <q-icon name="science" color="primary" />
-            </template>
-          </q-input>
-        </q-card-section>
-
-        <q-card-actions align="right" class="q-pa-md">
-          <q-btn flat label="Cancelar" color="grey-7" @click="cerrarDialogTipoMuestra" />
-          <q-btn
-            unelevated
-            :label="tipoMuestraForm.id ? 'Actualizar' : 'Guardar'"
-            :color="tipoMuestraForm.id ? 'warning' : 'accent'"
-            @click="guardarTipoMuestra"
-          />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
-
-    <!-- DIALOG: ELEMENTO -->
-    <q-dialog v-model="dialogElemento" persistent>
-      <q-card class="dialog-card">
-        <q-card-section class="dialog-title">
-          <div class="text-h6">
-            <q-icon name="category" class="q-mr-sm" />
-            {{ elementoForm.id ? 'Actualizar Elemento' : 'Nuevo Elemento' }}
-          </div>
-        </q-card-section>
-
-        <q-card-section>
-          <q-input
-            filled
-            v-model="elementoForm.tipo_elemento"
-            label="Nombre del elemento"
-            class="input-modern"
-            :rules="[(val) => !!val || 'Campo requerido']"
-            autofocus
-          >
-            <template v-slot:prepend>
-              <q-icon name="auto_awesome" color="primary" />
-            </template>
-          </q-input>
-        </q-card-section>
-
-        <q-card-actions align="right" class="q-pa-md">
-          <q-btn flat label="Cancelar" color="grey-7" @click="cerrarDialogElemento" />
-          <q-btn
-            unelevated
-            :label="elementoForm.id ? 'Actualizar' : 'Guardar'"
-            :color="elementoForm.id ? 'warning' : 'accent'"
-            @click="guardarElemento"
-          />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
-
-    <!-- DIALOG: MARCHA-MÉTODO -->
-    <q-dialog v-model="dialogMarcha" persistent>
-      <q-card class="dialog-card">
-        <q-card-section class="dialog-title">
-          <div class="text-h6">
-            <q-icon name="precision_manufacturing" class="q-mr-sm" />
-            {{ marchaForm.id ? 'Actualizar Método' : 'Nuevo Método' }}
-          </div>
-        </q-card-section>
-
-        <q-card-section>
-          <q-input
-            filled
-            v-model="marchaForm.metodo"
-            label="Nombre del método"
-            class="input-modern"
-            :rules="[(val) => !!val || 'Campo requerido']"
-            autofocus
-          >
-            <template v-slot:prepend>
-              <q-icon name="engineering" color="primary" />
-            </template>
-          </q-input>
-        </q-card-section>
-
-        <q-card-actions align="right" class="q-pa-md">
-          <q-btn flat label="Cancelar" color="grey-7" @click="cerrarDialogMarcha" />
-          <q-btn
-            unelevated
-            :label="marchaForm.id ? 'Actualizar' : 'Guardar'"
-            :color="marchaForm.id ? 'warning' : 'accent'"
-            @click="guardarMarchaMetodo"
-          />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
   </q-page>
 </template>
 
@@ -300,14 +249,6 @@ defineOptions({
 })
 
 const API = 'https://cifradosdev.com/certi_minera_backend/public'
-
-// ============================
-//     DIALOG CONTROLS
-// ============================
-const dialogTipoMuestra = ref(false)
-const dialogElemento = ref(false)
-const dialogMarcha = ref(false)
-const tabActual = ref('tiposMuestra')
 
 // ============================
 //     FORM REFS
@@ -348,39 +289,6 @@ const colMarcha = [
 ]
 
 /* ============================
-   DIALOG OPEN/CLOSE FUNCTIONS
-  ============================ */
-function abrirDialogTipoMuestra() {
-  tipoMuestraForm.value = { id: null, tipo_muestra: '' }
-  dialogTipoMuestra.value = true
-}
-
-function cerrarDialogTipoMuestra() {
-  tipoMuestraForm.value = { id: null, tipo_muestra: '' }
-  dialogTipoMuestra.value = false
-}
-
-function abrirDialogElemento() {
-  elementoForm.value = { id: null, tipo_elemento: '' }
-  dialogElemento.value = true
-}
-
-function cerrarDialogElemento() {
-  elementoForm.value = { id: null, tipo_elemento: '' }
-  dialogElemento.value = false
-}
-
-function abrirDialogMarcha() {
-  marchaForm.value = { id: null, metodo: '' }
-  dialogMarcha.value = true
-}
-
-function cerrarDialogMarcha() {
-  marchaForm.value = { id: null, metodo: '' }
-  dialogMarcha.value = false
-}
-
-/* ============================
      TIPO MUESTRA (CRUD)
   ============================ */
 async function cargarTiposMuestra() {
@@ -398,7 +306,7 @@ async function guardarTipoMuestra() {
     await axios.post(`${API}/tipo-muestra`, tipoMuestraForm.value)
     Notify.create({ type: 'positive', message: 'Registrado correctamente' })
   }
-  cerrarDialogTipoMuestra()
+  cancelarTipoMuestra()
   void cargarTiposMuestra()
 }
 function editarTipoMuestra(row: TipoMuestra) {
@@ -406,7 +314,9 @@ function editarTipoMuestra(row: TipoMuestra) {
     id: row.id ?? null,
     tipo_muestra: row.tipo_muestra,
   }
-  dialogTipoMuestra.value = true
+}
+function cancelarTipoMuestra() {
+  tipoMuestraForm.value = { id: null, tipo_muestra: '' }
 }
 function confirmarEliminarTipoMuestra(id: number) {
   Dialog.create({
@@ -441,7 +351,7 @@ async function guardarElemento() {
     await axios.post(`${API}/elemento`, elementoForm.value)
     Notify.create({ type: 'positive', message: 'Registrado correctamente' })
   }
-  cerrarDialogElemento()
+  cancelarElemento()
   void cargarElementos()
 }
 function editarElemento(row: Elemento) {
@@ -449,7 +359,9 @@ function editarElemento(row: Elemento) {
     id: row.id ?? null,
     tipo_elemento: row.tipo_elemento,
   }
-  dialogElemento.value = true
+}
+function cancelarElemento() {
+  elementoForm.value = { id: null, tipo_elemento: '' }
 }
 function confirmarEliminarElemento(id: number) {
   Dialog.create({
@@ -484,7 +396,7 @@ async function guardarMarchaMetodo() {
     await axios.post(`${API}/marcha-metodo`, marchaForm.value)
     Notify.create({ type: 'positive', message: 'Registrado correctamente' })
   }
-  cerrarDialogMarcha()
+  cancelarMarcha()
   void cargarMarchas()
 }
 function editarMarchaMetodo(row: MarchaMetodo) {
@@ -492,7 +404,9 @@ function editarMarchaMetodo(row: MarchaMetodo) {
     id: row.id ?? null,
     metodo: row.metodo,
   }
-  dialogMarcha.value = true
+}
+function cancelarMarcha() {
+  marchaForm.value = { id: null, metodo: '' }
 }
 function confirmarEliminarMarcha(id: number) {
   Dialog.create({

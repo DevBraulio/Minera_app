@@ -1,0 +1,116 @@
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0* Host cifradosdev.com:443 was resolved.
+* IPv6: (none)
+* IPv4: 65.181.111.241
+*   Trying 65.181.111.241:443...
+* Connected to cifradosdev.com (65.181.111.241) port 443
+* ALPN: curl offers h2,http/1.1
+} [5 bytes data]
+* TLSv1.3 (OUT), TLS handshake, Client hello (1):
+} [512 bytes data]
+*  CAfile: /etc/ssl/certs/ca-certificates.crt
+*  CApath: /etc/ssl/certs
+{ [5 bytes data]
+* TLSv1.3 (IN), TLS handshake, Server hello (2):
+{ [122 bytes data]
+* TLSv1.3 (IN), TLS handshake, Encrypted Extensions (8):
+{ [15 bytes data]
+* TLSv1.3 (IN), TLS handshake, Certificate (11):
+{ [3181 bytes data]
+* TLSv1.3 (IN), TLS handshake, CERT verify (15):
+{ [264 bytes data]
+* TLSv1.3 (IN), TLS handshake, Finished (20):
+{ [52 bytes data]
+* TLSv1.3 (OUT), TLS change cipher, Change cipher spec (1):
+} [1 bytes data]
+* TLSv1.3 (OUT), TLS handshake, Finished (20):
+} [52 bytes data]
+* SSL connection using TLSv1.3 / TLS_AES_256_GCM_SHA384 / X25519 / RSASSA-PSS
+* ALPN: server accepted h2
+* Server certificate:
+*  subject: CN=nevaddos.cifradosdev.com
+*  start date: Nov  9 23:59:11 2025 GMT
+*  expire date: Feb  7 23:59:10 2026 GMT
+*  subjectAltName: host "cifradosdev.com" matched cert's "cifradosdev.com"
+*  issuer: C=US; O=Let's Encrypt; CN=R13
+*  SSL certificate verify ok.
+*   Certificate level 0: Public key type RSA (2048/112 Bits/secBits), signed using sha256WithRSAEncryption
+*   Certificate level 1: Public key type RSA (2048/112 Bits/secBits), signed using sha256WithRSAEncryption
+*   Certificate level 2: Public key type RSA (4096/152 Bits/secBits), signed using sha256WithRSAEncryption
+} [5 bytes data]
+* using HTTP/2
+* [HTTP/2] [1] OPENED stream for https://cifradosdev.com/certi_minera_backend/public/certificado/certificados/1
+* [HTTP/2] [1] [:method: GET]
+* [HTTP/2] [1] [:scheme: https]
+* [HTTP/2] [1] [:authority: cifradosdev.com]
+* [HTTP/2] [1] [:path: /certi_minera_backend/public/certificado/certificados/1]
+* [HTTP/2] [1] [user-agent: curl/8.5.0]
+* [HTTP/2] [1] [accept: */*]
+} [5 bytes data]
+> GET /certi_minera_backend/public/certificado/certificados/1 HTTP/2
+> Host: cifradosdev.com
+> User-Agent: curl/8.5.0
+> Accept: */*
+> 
+{ [5 bytes data]
+< HTTP/2 500 
+< cache-control: no-store, max-age=0, no-cache
+< access-control-allow-origin: *
+< access-control-allow-credentials: true
+< access-control-allow-methods: GET, POST, OPTIONS, PUT, DELETE
+< access-control-allow-headers: Content-Type, Authorization
+< content-type: application/json; charset=UTF-8
+< date: Wed, 26 Nov 2025 04:42:39 GMT
+< server: LiteSpeed
+< vary: User-Agent
+< alt-svc: h3=":443"; ma=2592000, h3-29=":443"; ma=2592000, h3-Q050=":443"; ma=2592000, h3-Q046=":443"; ma=2592000, h3-Q043=":443"; ma=2592000, quic=":443"; ma=2592000; v="43,46"
+< 
+{ [1737 bytes data]
+100  1737    0  1737    0     0   4451      0 --:--:-- --:--:-- --:--:--  4465
+* Connection #0 to host cifradosdev.com left intact
+{
+    "title": "BadMethodCallException",
+    "type": "BadMethodCallException",
+    "code": 500,
+    "message": "Call to undefined method App\\Models\\Certificados\\CertificadoModel::getCertificadoById",
+    "file": "/home/itgupkvy/public_html/certi_minera_backend/vendor/codeigniter4/framework/system/Model.php",
+    "line": 879,
+    "trace": [
+        {
+            "file": "/home/itgupkvy/public_html/certi_minera_backend/app/Controllers/Certificados/CertificadoController.php",
+            "line": 46,
+            "function": "__call",
+            "class": "CodeIgniter\\Model",
+            "type": "->"
+        },
+        {
+            "file": "/home/itgupkvy/public_html/certi_minera_backend/vendor/codeigniter4/framework/system/CodeIgniter.php",
+            "line": 943,
+            "function": "show",
+            "class": "App\\Controllers\\Certificados\\CertificadoController",
+            "type": "->"
+        },
+        {
+            "file": "/home/itgupkvy/public_html/certi_minera_backend/vendor/codeigniter4/framework/system/CodeIgniter.php",
+            "line": 503,
+            "function": "runController",
+            "class": "CodeIgniter\\CodeIgniter",
+            "type": "->"
+        },
+        {
+            "file": "/home/itgupkvy/public_html/certi_minera_backend/vendor/codeigniter4/framework/system/CodeIgniter.php",
+            "line": 361,
+            "function": "handleRequest",
+            "class": "CodeIgniter\\CodeIgniter",
+            "type": "->"
+        },
+        {
+            "file": "/home/itgupkvy/public_html/certi_minera_backend/public/index.php",
+            "line": 79,
+            "function": "run",
+            "class": "CodeIgniter\\CodeIgniter",
+            "type": "->"
+        }
+    ]
+}

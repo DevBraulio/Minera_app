@@ -44,6 +44,13 @@
             @row-click="verDetalle"
             class="cursor-pointer sticky-header-table"
           >
+            <!-- SLOT CLIENTE NOMBRE -->
+            <template v-slot:body-cell-ClienteNombre="props">
+              <q-td :props="props">
+                {{ getNombreCliente(props.row.Cod_Cliente) }}
+              </q-td>
+            </template>
+
             <template v-slot:body-cell-acciones="props">
               <q-td>
                 <q-btn
@@ -105,7 +112,7 @@
                   <q-item dense>
                     <q-item-section>
                       <q-item-label caption>Cliente</q-item-label>
-                      <q-item-label>{{ detalle?.ClienteNombre }}</q-item-label>
+                      <q-item-label>{{ getNombreCliente(detalle?.Cod_Cliente) }}</q-item-label>
                     </q-item-section>
                   </q-item>
                 </div>
@@ -192,7 +199,20 @@
             row-key="Co_Guia"
             :rows-per-page-options="[10, 20, 50]"
             class="guias-table"
-          />
+          >
+            <template v-slot:body-cell-TipoMuestraNombre="props">
+              <q-td :props="props">
+                {{
+                  getNombreMuestra(props.row.id_tipo_muestra, props.row.id_configuracion_precios)
+                }}
+              </q-td>
+            </template>
+            <template v-slot:body-cell-AnalisisNombre="props">
+              <q-td :props="props">
+                {{ getNombreAnalisis(props.row.id_configuracion_precios) }}
+              </q-td>
+            </template>
+          </q-table>
         </q-card-section>
 
         <q-card-actions align="right" class="q-pa-md bg-grey-1">
@@ -348,6 +368,18 @@ interface Cliente {
   email?: string
 }
 
+interface TipoMuestra {
+  id: number
+  tipo_muestra: string
+}
+
+interface ConfiguracionPrecio {
+  id: number
+  nombre_comercial: string
+  precio: number
+  id_tipo_muestra: number | string // Added field
+}
+
 const API = 'https://cifradosdev.com/certi_minera_backend/public'
 
 // ========= ESTADOS LISTADO =========
@@ -357,6 +389,10 @@ const showDialog = ref(false)
 const filtro = ref('')
 const urlBoleta = ref('')
 const qrBoleta = ref('')
+
+// ========= CATALOGOS =========
+const tiposMuestra = ref<TipoMuestra[]>([])
+const configuracionPrecios = ref<ConfiguracionPrecio[]>([])
 
 // ========= ESTADOS REGISTRO =========
 const showRegistroDialog = ref(false)
@@ -391,7 +427,7 @@ const columnasBoleta: QTableProps['columns'] = [
   {
     name: 'ClienteNombre',
     label: 'Cliente',
-    field: 'ClienteNombre',
+    field: 'Cod_Cliente', // Usamos el ID para buscar el nombre
     align: 'left',
     sortable: true,
   },
@@ -421,8 +457,13 @@ const columnasBoleta: QTableProps['columns'] = [
 const columnasGuias: QTableProps['columns'] = [
   { name: 'Co_Guia', label: 'ID Guía', field: 'Co_Guia', align: 'left' },
   { name: 'identificacion', label: 'Identificación', field: 'identificacion', align: 'left' },
-  { name: 'TipoMuestraNombre', label: 'Tipo Muestra', field: 'TipoMuestraNombre', align: 'left' },
-  { name: 'AnalisisNombre', label: 'Análisis / Método', field: 'AnalisisNombre', align: 'left' },
+  { name: 'TipoMuestraNombre', label: 'Tipo Muestra', field: 'id_tipo_muestra', align: 'left' },
+  {
+    name: 'AnalisisNombre',
+    label: 'Análisis / Método',
+    field: 'id_configuracion_precios',
+    align: 'left',
+  },
   { name: 'Descripcion', label: 'Descripción', field: 'Descripcion', align: 'left' },
   { name: 'Total', label: 'Precio', field: 'Total', align: 'right' },
 ]
@@ -441,7 +482,7 @@ const filtrado = computed(() => {
   return boletas.value.filter(
     (b) =>
       (b.Num_Boleta?.toLowerCase() || '').includes(lower) ||
-      (b.ClienteNombre?.toLowerCase() || '').includes(lower) ||
+      (String(getNombreCliente(b.Cod_Cliente))?.toLowerCase() || '').includes(lower) ||
       (b.Fecha?.toLowerCase() || '').includes(lower),
   )
 })
@@ -463,6 +504,7 @@ const clientesFiltrados = computed(() => {
 onMounted(() => {
   void cargarBoletas()
   void cargarClientes()
+  void cargarCatalogos()
 })
 
 async function cargarBoletas() {
@@ -481,6 +523,56 @@ async function cargarClientes() {
   } catch (error) {
     console.error('Error cargando clientes:', error)
   }
+}
+
+async function cargarCatalogos() {
+  try {
+    const [resMuestras, resPrecios] = await Promise.all([
+      axios.get<TipoMuestra[]>(`${API}/tipo-muestra`),
+      axios.get<ConfiguracionPrecio[]>(`${API}/configuracion-precios`),
+    ])
+    tiposMuestra.value = resMuestras.data
+    configuracionPrecios.value = resPrecios.data
+  } catch (error) {
+    console.error('Error cargando catálogos:', error)
+  }
+}
+
+// ==========================
+// HELPERS MAPPING
+// ==========================
+function getNombreCliente(id: string | number | undefined) {
+  if (!id) return '---'
+  const c = clientes.value.find((x) => x.id_cliente == String(id))
+  return c ? c.nom_cliente : id
+}
+
+function getNombreMuestra(
+  idMuestra: number | string | undefined,
+  idConfig: number | string | undefined,
+) {
+  let finalIdMuestra = idMuestra
+
+  // Si no hay ID muestra, intentamos sacarlo de la configuración de precio
+  if (!finalIdMuestra && idConfig) {
+    const config = configuracionPrecios.value.find((c) => c.id == Number(idConfig))
+    if (config) {
+      finalIdMuestra = config.id_tipo_muestra
+    }
+  }
+
+  if (!finalIdMuestra) return '---'
+
+  const m = tiposMuestra.value.find((x) => x.id == Number(finalIdMuestra))
+  return m ? m.tipo_muestra : finalIdMuestra
+}
+
+function getNombreAnalisis(id: number | string | undefined) {
+  if (!id) return '---'
+  // El campo en la guía puede venir como id_analisis o id_configuracion_precios
+  // En la tabla usamos id_configuracion_precios
+  const a = configuracionPrecios.value.find((x) => x.id == Number(id))
+  return a ? a.nombre_comercial : id
 }
 
 // ==========================
